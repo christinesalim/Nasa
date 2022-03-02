@@ -1,7 +1,7 @@
 const request = require('supertest');
 //express server app
 const app = require('../../app');
-const { loadPlanetsData } = require('../../models/planets.model');
+
 const { 
   mongoConnect, 
   mongoDisconnect 
