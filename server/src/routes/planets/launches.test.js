@@ -1,10 +1,15 @@
 const request = require('supertest');
 //express server app
 const app = require('../../app');
+const { loadPlanetsData } = require('../../models/planets.model');
 const { 
   mongoConnect, 
   mongoDisconnect 
 } = require('../../services/mongo');
+
+const {
+  loadPlanetsData,
+} = require ('../../models/planets.model');
 
 const completeLaunchData = {
   mission: 'USS Enterprise',
@@ -30,6 +35,7 @@ describe('Launches API', () => {
   //Setup database connection
   beforeAll(async ()=> {
     await mongoConnect();
+    await loadPlanetsData();
   });
 
   //Disconnect from database
