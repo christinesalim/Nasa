@@ -14,10 +14,7 @@
   "author": "",
   "license": "ISC",
   "jest": {
-    "testEnvironment": "node",
-    "setupFilesAfterEnv": [
-      "./src/routes/planets/.jest/setEnvVars.js"
-    ]
+    "testEnvironment": "node"
   },
   "dependencies": {
     "cors": "^2.8.5",
