@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+//Read environment variables set for database connection
+require('dotenv').config();
+
 //Atlas database connection string
 const MONGO_URL = process.env.MONGO_URL;
 
