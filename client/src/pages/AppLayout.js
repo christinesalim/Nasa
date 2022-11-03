@@ -1,3 +1,8 @@
+/*
+  The AppLayout() functional component displays the main page of the 
+  application. It provides links to the Launch page, History page and 
+  the Upcoming launch page.
+*/
 import {
   useState,
 } from "react";
@@ -36,8 +41,7 @@ const styles = () => ({
   },
 });
 
-const AppLayout = props => {
-  const { sounds, classes } = props;
+const AppLayout = ({ sounds, classes }) => {
 
   const [frameVisible, setFrameVisible] = useState(true);
   const animateFrame = () => {
@@ -51,6 +55,7 @@ const AppLayout = props => {
   const onAbortSound = () => sounds.abort && sounds.abort.play();
   const onFailureSound = () => sounds.warning && sounds.warning.play();
 
+  //Get the launch functionality from useLaunches() hook
   const {
     launches,
     isPendingLaunch,

@@ -6,8 +6,8 @@ A React + Node project to determine habitable exoplanets and allow a user to sch
 
 # TO DO
 
-Add routes for the backend
-Add schema definition for database
+1. Add routes for the backend
+2. Add schema definition for database
 
 ## Functional Requirements
 
@@ -16,11 +16,11 @@ Add schema definition for database
 3. A user can update or delete an existing launch
 4. A user can view the launch history
 
-## Front End
+## Front End (nasa-fe)
 
 The React user interface allows the user to schedule launches to habitable exoplanets, view upcoming launches, and see a history of past launches. The Arwes SCI FI UI library adds animation, backgrounds, a color scheme and sounds to the UI components. On startup, the client gets a list of habitable exoplanets from the server that is displayed for scheduling launches. The Upcoming Launches window displays the launches that were successfully scheduled. The History window displays launches that have occurred in the past.
 
-## Back End
+## Back End (nasa-project-api)
 
 The application server uses Node.js to respond to HTTP requests from
 the client to schedule launches, modify and delete them. On start up,
@@ -40,9 +40,15 @@ receives a sufficient amount of light.
 
 React provides the front-end components for the application. The main pages include: Schedule a Launch, Upcoming Launches and Launch History
 
+### Custom Hooks
+
+UseLaunches(): a custom hook that saves a list of launches, gets previously saved launches from the backend, submits new launches to the server, and aborts launches.
+
+UsePlanets(): a custome hook to get the list of habitable planets from the server
+
 ### arwes SCI-FI library
 
-Provides a SCI-FI library for the user interface that includes, sounds, a color scheme and animation.
+The arwes library provides a SCI-FI component library for the user interface that includes, sounds, a color scheme and animation.
 
 # Planetary Data
 
@@ -58,8 +64,13 @@ The stream of data from the CSV file is piped into the csv-parse module's parse(
 
 ## MongoDb Database
 
-Data for each habitable exoplanet is stored in the Planets collection. The values for the planetary radius, disposition property and insolation_flux (amount of light received) are the criteria used to determine if a planet is habitable. Exoplanets meeting the criteria are added to the Planets collection.
-The flights scheduled by a user are stored in the Launches collection.
+### Planet Collection
+
+Data for each habitable exoplanet is stored in the Planets collection. The values for the planetary radius, disposition property and insolation_flux (amount of light received) are the criteria used to determine if a planet is habitable. Exoplanets meeting the criteria are added to the Planet collection.
+
+### Launch Collection
+
+The flights scheduled by a user are stored in the Launch collection.
 
 ## Additional Info
 
