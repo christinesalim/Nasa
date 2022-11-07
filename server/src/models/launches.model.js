@@ -1,5 +1,8 @@
 const axios = require('axios');
 const launchesDatabase = require('./launches.mongo');
+
+//Getting the planets list to check if user entered planet is valid by
+//comparing it with this list.
 const planets = require('./planets.mongo');
 
 const DEFAULT_LAUNCH_NUMBER = 100;
@@ -94,7 +97,8 @@ async function loadLaunchData(){
 }
 
 
-//Returns a JS array with launch data, remove id and __v columns
+//Returns a JS array with launch data, 
+//Remove document id and __v mongoose version key columns
 async function getAllLaunches(skip, limit){
   return await launchesDatabase
   .find({}, {'id': 0, '__v': 0 })
@@ -103,8 +107,19 @@ async function getAllLaunches(skip, limit){
   .limit(limit);
 }
 
-//Save launch
+//Save launch by inserting it if it's new otherwise update
+//the existing launch if the flightNumber already exists in the 
+//database.
 async function saveLaunch(launch){   
+
+  //Throw an error if we try to schedule a launch to an invalid planet
+  const planet = await planets.findOne({
+    keplerName: launch.target,
+  });
+  if (!planet){
+    throw new Error('No matching planet found');
+  }
+
   await launchesDatabase.findOneAndUpdate({
     flightNumber: launch.flightNumber,
   }, launch, {
