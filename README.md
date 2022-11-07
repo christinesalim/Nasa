@@ -4,17 +4,19 @@ A React + Node project to determine habitable exoplanets and allow a user to sch
 
 ![System Architecture](doc_images/SofwareArchitecture.png)
 
-# TO DO
-
-1. Add routes for the backend
-2. Add schema definition for database
-
 ## Functional Requirements
 
 1. A user can get a list of habitable exoplanets
 2. A user can schedule a launch to a habitable exoplanet
 3. A user can update or delete an existing launch
 4. A user can view the launch history
+
+## Planetary Data Background
+
+The Kepler space telescope collected data for 9 years beginning in 2009.
+NASA has made a catalog of the planets and stars discovered. A planet is
+considered habitable if it resembles Earth in terms of size, and
+receives a sufficient amount of light.
 
 ## Front End (nasa-fe)
 
@@ -27,12 +29,22 @@ the client to schedule launches, modify and delete them. On start up,
 the server reads a CSV file containing planetary data to create a list of
 habitable planets that it sends to the React front end. This list of planets is also stored in a MongoDB collection. The server also stores launches in a MongoDB collection. A Mongoose schema validates the data before storing it.
 
-## Planetary Data Background
+# Model View Controller Architecture
 
-The Kepler space telescope collected data for 9 years beginning in 2009.
-NASA has made a catalog of the planets and stars discovered. A planet is
-considered habitable if it resembles Earth in terms of size, and
-receives a sufficient amount of light.
+The data for the application consists of habitable planets and flight launch information. The Model layer for the software provides functions to access the planet and launch data in server/src/models/planets.model.js and server/src/models/launches.model.js. This model layer hides the lower level implementation details used to interact with the MongoDB database collection allowing us to easily change databases in the future.
+
+The Controller software in the server implements the endpoints for the planets and launches and their corresponding HTTP methods. The Contoller interacts with the model layer to store and retrieve data in the database.
+
+- GET /planets/
+  - Allows the user to get the list of habitable planets
+- GET /launches/
+  - Allows the user the get the list of scheduled launches
+- POST /launches/
+  - Allows the user to schedule a new launch
+- DELETE /launches/:id
+  - Allows the user to delete an existing launch
+
+The Controller sends planet and launch data to the front-end View component so that it can be displayed to the user. When the user interacts with the application, the View sends requests to schedule or delete launches to the Controller and displays responses it receives for those operations.
 
 # Core Components of the Software
 
@@ -50,6 +62,14 @@ UsePlanets(): a custome hook to get the list of habitable planets from the serve
 
 The arwes library provides a SCI-FI component library for the user interface that includes, sounds, a color scheme and animation.
 
+## Express Server
+
+### Routing Middleware on Server Side
+
+The express.Router middleware handles routes for the planets and launches endpoints. For example, to display the list of planets the client issues a get request to the /planets route. The Planets router middleware receives the request and forwards it to the Planets.Controller which uses the Planets.Model to query the MongoDB collection and retrieve the list of planets. The result is then sent back to the client in an HTTP response.
+
+![Planets Route](doc_images/GetPlanetsReq.png)
+
 # Planetary Data
 
 ## kepler_data.csv
@@ -62,15 +82,24 @@ The stream of data from the CSV file is piped into the csv-parse module's parse(
 
 ![Planetary Data Processing](doc_images/DataProcessingStream.png)
 
-## MongoDb Database
+## MongoDb Atlas Database Cluster
+
+The database for the application is deployed with MongoDB Atlas. MongoDB Atlas deploys the application database to a cluster on the cloud providing high availability, scalability, built-in replication and auto-sharding.
+
+![Schema Design](doc_images/Schemas.png)
 
 ### Planet Collection
 
-Data for each habitable exoplanet is stored in the Planets collection. The values for the planetary radius, disposition property and insolation_flux (amount of light received) are the criteria used to determine if a planet is habitable. Exoplanets meeting the criteria are added to the Planet collection.
+Data for each habitable exoplanet is stored in the Planets collection. The values for the planetary radius, disposition property and insolation_flux (amount of light received) are the criteria used to determine if a planet is habitable. Exoplanets meeting the criteria are added to the Planet collection. The schema for the planet collection is located in server/src/models/planets.mongo.js
 
 ### Launch Collection
 
-The flights scheduled by a user are stored in the Launch collection.
+The flights scheduled by a user are stored in the Launch collection. The schema for the launch collection is located in server/src/models/launches.mongo.js.
+The launch target value comes from the Planet collection. Rather than reference the planet from the Planet collection, the exoplanet's name is embedded into the Launch collection to keep the data for a launch in one document.
+
+## Logging on server side
+
+The application uses morgan as an HTTP request logger to log requests in a standard Apache output format using the "combined" predefined format in development mode.
 
 ## Additional Info
 
