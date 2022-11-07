@@ -3,7 +3,7 @@ const { parse } = require('csv-parse');
 const fs = require('fs');
 const path = require ('path');
 
-//Stores data from csv file
+//Stores data from csv file to the MongoDB Planet collection
 const planets = require('./planets.mongo');
 
 function isHabitablePlanet(planet) {
@@ -41,7 +41,11 @@ function loadPlanetsData() {
   });
 }
 
+//Retrieve all the habitable planets from the database
 async function getAllPlanets(){
+  //find takes a filter as first argument: leave bland to get all values
+  //second argument is the projection: fields we are interested in; use
+  //0 to exclued the id and version data
   return await planets.find({}, {
     '_id': 0, //don't return the id and version
     '__v': 0,
@@ -51,7 +55,10 @@ async function getAllPlanets(){
 //Saves the planet from .csv file to the database
 async function savePlanet(planet){
   try {
-    //only insert if value is not present otherwise update the value
+    
+    //to avoid duplicating planets in the collection
+    //upsert: combines update + insert; only insert if not present; otherwise
+    //update the value
     await planets.updateOne({
       keplerName: planet.kepler_name,//filter
     },{

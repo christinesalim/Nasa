@@ -4,6 +4,7 @@ const planets = require('./planets.mongo');
 
 const DEFAULT_LAUNCH_NUMBER = 100;
 
+/* Test data to use before MongoDB Launch collection was setup
 const launches = new Map();
 
 const launch = {
@@ -16,6 +17,7 @@ const launch = {
   upcoming: true, //upcoming
   success: true, //success
 };
+*/
 
 const SPACEX_API_URL = 'https://api.spacexdata.com/v4/launches/query';
 

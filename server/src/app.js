@@ -12,6 +12,7 @@ app.use(cors({
 //For logging
 app.use(morgan('combined'));
 
+//Serve static assets from the public folder
 app.use(express.static(path.join(__dirname,'..','public' )));//serve all public files for client
 app.use(express.json()); //middleware to parse json
 
