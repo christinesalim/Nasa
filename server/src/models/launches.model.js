@@ -90,12 +90,14 @@ async function loadLaunchData(){
 
 //Returns a JS array with launch data, 
 //Remove document id and __v mongoose version key columns
-//skip: how many results to skip in the database
-//limit: the number of documents to return
+//sort the documents first by flight number and then get results based on pagination
+//skip: how many results to skip in the database based on which page we are on
+//limit: the number of documents to return per page
+//For e.g. If we display limit=10, then on page 2 we skip the first 10 results
 async function getAllLaunches(skip, limit){
   return await launchesDatabase
   .find({}, {'id': 0, '__v': 0 })
-  .sort({ flightNumber: -1 }) //ascending = 1, descending = -1
+  .sort({ flightNumber: 1 }) //ascending = 1, descending = -1
   .skip(skip)
   .limit(limit);
 }
