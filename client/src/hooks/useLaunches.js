@@ -14,8 +14,6 @@ function useLaunches(onSuccessSound, onAbortSound, onFailureSound) {
   //on re-render we don't get all the launches over and over again.
   const getLaunches = useCallback(async () => {
     const fetchedLaunches = await httpGetLaunches();
-    console.log("useLaunches: got list of saved launches from db");
-    console.log("fetchedLaunches: ", fetchedLaunches);
     saveLaunches(fetchedLaunches);
   }, []);
 
@@ -51,7 +49,7 @@ function useLaunches(onSuccessSound, onAbortSound, onFailureSound) {
     //Set success based on response.ok
     const success = response.ok;
     if (success) {
-      console.log("Successfully submitted launch; getting updated list from server");
+      //console.log("Successfully submitted launch; getting updated list from server");
       getLaunches();
       setTimeout(() => {
         setPendingLaunch(false);

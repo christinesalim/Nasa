@@ -1,6 +1,6 @@
 # Nasa Exoplanet Flights
 
-A React + Node project to determine habitable exoplanets and allow a user to schedule a flight to them. An exoplanet is a planet outside the earth’s solar system with conditions favorable to life.
+A React + Node + MongoDB application to determine habitable exoplanets and schedule a flight to a planet. An exoplanet is a planet outside the earth’s solar system with conditions favorable to life. The application also displays upcoming launches and allows the user to abort a launch. The History page displays launches scheduled by the user in the application and by SpaceX Technology Corp. since 2006.
 
 ![System Architecture](doc_images/SofwareArchitecture.png)
 
@@ -9,7 +9,8 @@ A React + Node project to determine habitable exoplanets and allow a user to sch
 1. A user can get a list of habitable exoplanets
 2. A user can schedule a launch to a habitable exoplanet
 3. A user can update or delete an existing launch
-4. A user can view the launch history
+4. A user can view the upcoming launches scheduled by the user
+5. A user can view the launch history from user scheduled and SpaceX launches
 
 ## Planetary Data Background
 
@@ -24,7 +25,7 @@ The React user interface allows the user to schedule launches to habitable exopl
 
 ## Back End (nasa-project-api)
 
-The application server uses Node.js to respond to HTTP requests from
+The monolith application server uses Node.js to respond to HTTP requests from
 the client to schedule launches, modify and delete them. On start up,
 the server reads a CSV file containing planetary data to create a list of
 habitable planets that it sends to the React front end. This list of planets is also stored in a MongoDB collection. The server also stores launches in a MongoDB collection. A Mongoose schema validates the data before storing it.
@@ -42,9 +43,13 @@ The Controller software in the server implements the endpoints for the planets a
 - POST /launches/
   - Allows the user to schedule a new launch
 - DELETE /launches/:id
-  - Allows the user to delete an existing launch
+  - Allows the user to abort an existing launch
 
 The Controller sends planet and launch data to the front-end View component so that it can be displayed to the user. When the user interacts with the application, the View sends requests to schedule or delete launches to the Controller and displays responses it receives for those operations.
+
+### Aborting a Launch
+
+Aborting a launch does not delete the launch from the launches collection. It updates its upcoming and success status to false so that it is no longer visible on the Upcoming Launches page but it is still visible in the History page.
 
 # Core Components of the Software
 
@@ -66,7 +71,9 @@ The arwes library provides a SCI-FI component library for the user interface tha
 
 ### Routing Middleware on Server Side
 
-The express.Router middleware handles routes for the planets and launches endpoints. For example, to display the list of planets the client issues a get request to the /planets route. The Planets router middleware receives the request and forwards it to the Planets.Controller which uses the Planets.Model to query the MongoDB collection and retrieve the list of planets. The result is then sent back to the client in an HTTP response.
+The express.Router is used to create two routers on the server side to handle requests received on the planets and launches endpoints. The planets and launches routers are installed as middleware. As an example, to display the list of planets to the user the client issues an HTTP GET request to the /planets route. The planets router middleware receives the request and processes it by calling the appropriate function in the planets controller. The planets controller uses the planets model to query the MongoDB planets collection and retrieves the list of planets. The controller sends the list of planets to the client in an HTTP response.
+
+The server provides the existing routes for the planets and launches endpoints under version 1 of the API. This allows the application to modify the routes and provide new versions in the future.
 
 ![Planets Route](doc_images/GetPlanetsReq.png)
 
@@ -97,13 +104,21 @@ Data for each habitable exoplanet is stored in the Planets collection. The value
 The flights scheduled by a user are stored in the Launch collection. The schema for the launch collection is located in server/src/models/launches.mongo.js.
 The launch target value comes from the Planet collection. Rather than reference the planet from the Planet collection, the exoplanet's name is embedded into the Launch collection to keep the data for a launch in one document. However we need to perform referential integrity manually since MongoDB doesn't enforce referentially integrity automatically. The launches model verifies that each launch target matches a kepler planet name from the planets collection.
 
+## SpaceX-API Integration
+
+The server obtains an unofficial list of launches conducted by SpaceX through the SpaceX-API, an open source REST API for SpaceX launches. It has information such as launch, rocket, payload, customers, etc. This list of launches is displayed in the History pages of the user interface. The SpaceX-API is queried the very first time the application starts up to get the data and store it to the database. Once this data is stored it is reused on subsequent running of the application. The axios library is used for making requests to the API.
+
+https://github.com/r-spacex/SpaceX-API
+
 ## Logging on server side
 
 The application uses morgan as an HTTP request logger to log requests in a standard Apache output format using the "combined" predefined format in development mode.
 
-# Improvements
+# Future Improvement Ideas
 
-1. Set a timer for launch requests; if a response doesn't arrive we can provide an appropriate error message.
+1. Not waiting indefinitely for launch requests to be handled; if a response doesn't arrive we can provide an appropriate error message.
+2. Allowing a user's aborted launch to get rescheduled
+3. Add Pagination to History page with a Next and Prev button
 
 ## Additional Info
 

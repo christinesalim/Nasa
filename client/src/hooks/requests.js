@@ -8,6 +8,7 @@ async function httpGetPlanets() {
 }
 
 // Load launches, sort by flight number, and return as JSON.
+// Return an ok status of false if there was an error
 async function httpGetLaunches() {
   //default method is GET with fetch()
   const resp = await fetch(`${API_URL}/launches`);
@@ -21,7 +22,7 @@ async function httpGetLaunches() {
 // Submit given launch data to launch system.
 async function httpSubmitLaunch(launch) {
   try{
-    //ok status of response is returned to caller useLaunches hook
+    // ok status of response is returned to caller useLaunches hook
     return await fetch(`${API_URL}/launches`, {
       method: "post",
       headers: {
@@ -30,7 +31,7 @@ async function httpSubmitLaunch(launch) {
       body: JSON.stringify(launch),
     });
   } catch(err) {
-    //In case of error return ok value of false to the caller
+    // In case of error return ok value of false to the caller
     return {
       ok: false,
       err,
@@ -39,7 +40,8 @@ async function httpSubmitLaunch(launch) {
   
 }
 
-// Delete launch with given ID.
+// Delete launch with given ID. If there was an error return an ok value of false
+//to the caller and the err object.
 async function httpAbortLaunch(id) {
   try{
     //send HTTP delete request for this launch ID
