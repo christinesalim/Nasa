@@ -24,6 +24,7 @@ const Upcoming = props => {
     classes,
     abortLaunch,
   } = props;
+  console.log("***Upcoming", launches);
 
   const tableBody = useMemo(() => {
     return launches?.filter((launch) => launch.upcoming)

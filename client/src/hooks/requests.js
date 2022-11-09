@@ -9,6 +9,7 @@ async function httpGetPlanets() {
 
 // Load launches, sort by flight number, and return as JSON.
 async function httpGetLaunches() {
+  //default method is GET with fetch()
   const resp = await fetch(`${API_URL}/launches`);
   const launches = await resp.json();
   return launches.sort( (a,b) => {
@@ -20,6 +21,7 @@ async function httpGetLaunches() {
 // Submit given launch data to launch system.
 async function httpSubmitLaunch(launch) {
   try{
+    //ok status of response is returned to caller useLaunches hook
     return await fetch(`${API_URL}/launches`, {
       method: "post",
       headers: {
@@ -28,6 +30,7 @@ async function httpSubmitLaunch(launch) {
       body: JSON.stringify(launch),
     });
   } catch(err) {
+    //In case of error return ok value of false to the caller
     return {
       ok: false,
       err,

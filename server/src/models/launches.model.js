@@ -102,7 +102,7 @@ async function loadLaunchData(){
 async function getAllLaunches(skip, limit){
   return await launchesDatabase
   .find({}, {'id': 0, '__v': 0 })
-  .sort({ flightNumber: 1 }) //ascending = 1, descending = -1
+  .sort({ flightNumber: -1 }) //ascending = 1, descending = -1
   .skip(skip)
   .limit(limit);
 }
@@ -113,12 +113,13 @@ async function getAllLaunches(skip, limit){
 async function saveLaunch(launch){   
 
   //Throw an error if we try to schedule a launch to an invalid planet
-  const planet = await planets.findOne({
+  //SpaceX launches are to other exoplanets
+  /*const planet = await planets.findOne({
     keplerName: launch.target,
   });
   if (!planet){
-    throw new Error('No matching planet found');
-  }
+    console.log(`${launch.target} No matching planet found`);
+  }*/
 
   await launchesDatabase.findOneAndUpdate({
     flightNumber: launch.flightNumber,
@@ -128,7 +129,7 @@ async function saveLaunch(launch){
 }
 
 
-//Schedule a new launch
+//Schedule a new launch 
 async function scheduleNewLaunch(launch){
   const planet = await planets.findOne({
     keplerName: launch.target,
@@ -136,11 +137,16 @@ async function scheduleNewLaunch(launch){
   if (!planet){
     throw new Error('No matching planet found');
   }
+
+  //Get the latest flight number and increment it
   const newFlightNumber = await getLatestFlightNumber() + 1;
+
+  //User will provide date, mission, rocket and target properties of a launch
+  //Server adds additional properties that are part of a new launch 
   const newLaunch = Object.assign(launch, {
     success: true,
     upcoming: true,
-    customers: ['U.S.', 'NASA'],
+    customers: ['U.S.A.', 'NASA'], //customers are hard-coded for now
     flightNumber: newFlightNumber,
   });
   try {

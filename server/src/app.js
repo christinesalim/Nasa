@@ -17,8 +17,8 @@ app.use(express.static(path.join(__dirname,'..','public' )));//serve all public 
 app.use(express.json()); //middleware to parse json
 
 app.use('/v1',api);
-//Use * to match any routes not handled above by serving index.html and then 
-//react can handle the routing
+//Use * to match any routes or endpoints not handled above with the api
+//by serving index.html and then react can handle the routing within the app
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, "..", "public", "index.html"));
 })

@@ -95,11 +95,15 @@ Data for each habitable exoplanet is stored in the Planets collection. The value
 ### Launch Collection
 
 The flights scheduled by a user are stored in the Launch collection. The schema for the launch collection is located in server/src/models/launches.mongo.js.
-The launch target value comes from the Planet collection. Rather than reference the planet from the Planet collection, the exoplanet's name is embedded into the Launch collection to keep the data for a launch in one document.
+The launch target value comes from the Planet collection. Rather than reference the planet from the Planet collection, the exoplanet's name is embedded into the Launch collection to keep the data for a launch in one document. However we need to perform referential integrity manually since MongoDB doesn't enforce referentially integrity automatically. The launches model verifies that each launch target matches a kepler planet name from the planets collection.
 
 ## Logging on server side
 
 The application uses morgan as an HTTP request logger to log requests in a standard Apache output format using the "combined" predefined format in development mode.
+
+# Improvements
+
+1. Set a timer for launch requests; if a response doesn't arrive we can provide an appropriate error message.
 
 ## Additional Info
 
