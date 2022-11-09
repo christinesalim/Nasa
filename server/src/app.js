@@ -13,10 +13,16 @@ app.use(cors({
 app.use(morgan('combined'));
 
 //Serve static assets from the public folder
-app.use(express.static(path.join(__dirname,'..','public' )));//serve all public files for client
-app.use(express.json()); //middleware to parse json
 
+//serve all public files for client
+app.use(express.static(path.join(__dirname,'..','public' )));
+
+//middleware to parse json
+app.use(express.json()); 
+
+//Mount the api under "v1" version of the API
 app.use('/v1',api);
+
 //Use * to match any routes or endpoints not handled above with the api
 //by serving index.html and then react can handle the routing within the app
 app.get('/*', (req, res) => {

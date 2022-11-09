@@ -12,7 +12,7 @@ const {
 async function httpGetAllLaunches(req, res) {
   const { skip, limit } = getPagination(req.query);
   const launches = await getAllLaunches(skip, limit);
-  console.log("httpGetAllLaunches", launches);
+  //console.log("httpGetAllLaunches", launches);
   return res.status(200).json(launches);
 }
 

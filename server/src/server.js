@@ -21,7 +21,7 @@ async function startServer() {
   //Load the planets data before accepting API requests
   await loadPlanetsData();
 
-  //Load launch data
+  //Load launch data from the SpaceX API
   await loadLaunchData();
 
   server.listen(PORT, () => {
