@@ -1,5 +1,7 @@
 # Nasa Exoplanet Flights
 
+http://54.177.37.74:8000/launch
+
 A React + Node + MongoDB application to determine habitable exoplanets and schedule a flight to a planet. An exoplanet is a planet outside the earth’s solar system with conditions favorable to life. The application also displays upcoming launches and allows the user to abort a launch. The History page displays launches scheduled by the user in the application and by SpaceX Technology Corp. since 2006.
 
 ![System Architecture](doc_images/SofwareArchitecture.png)
@@ -81,7 +83,7 @@ The server provides the existing routes for the planets and launches endpoints u
 
 ## kepler_data.csv
 
-This CSV file contains planetary data for objects detected by the telescope. We create a readable stream with the fs module to read the file's contents line by line. The 'data' event notifies our application when a chunk of data has been read from the file.
+This CSV file contains planetary data for objects detected by the Kepler telescope. NASA launched the telescope in 2009 to discover Earth-size planets that orbit other starts. We create a readable stream with the fs module to read the file's contents line by line. The 'data' event notifies our application when a chunk of data has been read from the file.
 
 ## csv-parse module
 
@@ -125,3 +127,5 @@ The application uses morgan as an HTTP request logger to log requests in a stand
 KOI: Kepler Objects of Interest (See KOI Table Cumulative List)
 https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=cumulative
 https://exoplanetarchive.ipac.caltech.edu/docs/API_kepcandidate_columns.html
+
+This project was done for the course Complete NodeJS Developer in 2022.
