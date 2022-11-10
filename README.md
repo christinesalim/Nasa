@@ -1,6 +1,6 @@
-# Nasa Exoplanet Flights
+# NASA Exoplanet Flight Dashboard
 
-http://54.177.37.74:8000/launch
+Try out the application here: [Flight Schedule Dashboard](http://54.177.37.74:8000/launch)
 
 A React + Node + MongoDB application to determine habitable exoplanets and schedule a flight to a planet. An exoplanet is a planet outside the earth’s solar system with conditions favorable to life. The application also displays upcoming launches and allows the user to abort a launch. The History page displays launches scheduled by the user in the application and by SpaceX Technology Corp. since 2006.
 
